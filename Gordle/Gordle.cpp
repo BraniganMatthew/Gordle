@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include "WordManager.h"
+
 int main()
 {
     std::cout << "Hello World!\n";
