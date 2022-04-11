@@ -146,11 +146,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="Gordle.cpp" />
     <ClCompile Include="GUIBase.cpp" />
     <ClCompile Include="WordManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="FileManager.h" />
     <ClInclude Include="GUIBase.h" />
     <ClInclude Include="WordManager.h" />
   </ItemGroup>
