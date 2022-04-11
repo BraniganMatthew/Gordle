@@ -2,12 +2,16 @@
 //
 
 #include <iostream>
+#include "WordManager.h"
 
 int main()
 {
     std::cout << "Hello World!\n";
 
-    std::cout << "Hello Matt";
+    std::cout << "Hello Matt\n";
+
+    WordManager test;
+    test.testFunction();
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
