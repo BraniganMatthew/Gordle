@@ -3,12 +3,13 @@
 
 #include <iostream>
 #include "WordManager.h"
-
 int main()
 {
     std::cout << "Hello World!\n";
 
     std::cout << "Hello Matt\n";
+
+    std::cout << "We should use namespace std!" << std::endl;
 
     WordManager test;
     test.testFunction();
