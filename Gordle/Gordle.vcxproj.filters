@@ -24,7 +24,7 @@
     <ClCompile Include="GUIBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FileManager.cpp">
+    <ClCompile Include="RandomNumber.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -35,7 +35,7 @@
     <ClInclude Include="GUIBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FileManager.h">
+    <ClInclude Include="RandomNumber.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
