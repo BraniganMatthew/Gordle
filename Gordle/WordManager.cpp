@@ -101,6 +101,7 @@ void WordManager::getFileOnline(std::unordered_map<std::string, std::unordered_s
 			continue;
 		if (temp == "")
 			break;
+		std::transform(temp.begin(), temp.end(), temp.begin(), ::tolower);
 		wordMap[temp.substr(0, 2)].insert(temp);
 		count++;
 	}
