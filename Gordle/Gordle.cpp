@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include "WordManager.h"
+#include "GameLogic.h"
 
 int main()
 {
@@ -11,6 +12,9 @@ int main()
     std::cout << "Hello Matt\n";
 
     std::cout << "We should use namespace std!" << std::endl;
+
+    GameLogic game;
+    game.runGame();
 
     WordManager test;
     test.testFunction();
