@@ -148,13 +148,16 @@
     <ClCompile Include="GameLogic.cpp" />
     <ClCompile Include="Gordle.cpp" />
     <ClCompile Include="GUIBase.cpp" />
+    <ClCompile Include="HashTable.cpp" />
     <ClCompile Include="RandomNumber.cpp" />
     <ClCompile Include="WordManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameLogic.h" />
     <ClInclude Include="GUIBase.h" />
+    <ClInclude Include="HashTable.h" />
     <ClInclude Include="RandomNumber.h" />
+    <ClInclude Include="resource1.h" />
     <ClInclude Include="WordManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,16 +1,19 @@
 #pragma once
 #include <unordered_map>
 #include <unordered_set>
+#include "HashTable.h"
 
+//typedef std::unordered_set<std::string>* HashTable;
 
 class WordManager
 {
 private:
 	enum fileType {valids,solutions};
-	std::unordered_map<std::string, std::unordered_set<std::string>> validList, solutionList;
+	HashTable validList, solutionList;
+	//std::unordered_map<std::string, std::unordered_set<std::string>> validList, solutionList;
 	unsigned int validCount, solutionCount;
-	void getFileOffline(std::unordered_map<std::string, std::unordered_set<std::string>>& wordMap, const std::vector<std::string>& words);
-	void getFileOnline(std::unordered_map<std::string, std::unordered_set<std::string>>& wordMap, std::string url, std::string fileName, unsigned int& count);
+	void getFileOffline(HashTable& wordMap, const std::vector<std::string>& words);
+	void getFileOnline(HashTable& wordMap, std::string url, std::string fileName, unsigned int& count);
 	void getFile(int fileType);
 	void initalizeMap();
 

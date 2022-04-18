@@ -7,6 +7,8 @@
 #include <fstream>
 #include <algorithm>
 
+#define MAX_SIZE 676
+
 #pragma comment(lib, "urlmon.lib")
 
 WordManager::WordManager()
@@ -18,7 +20,7 @@ WordManager::WordManager()
 
 WordManager::~WordManager()
 {
-	
+
 }
 
 void WordManager::initalizeMap()
@@ -33,7 +35,7 @@ void WordManager::initalizeMap()
 void WordManager::getFile(int fileType)
 {
 	std::string fileName, url;
-	std::unordered_map<std::string, std::unordered_set<std::string>>* wordMap;
+	HashTable* wordMap;
 	//const std::vector<std::string>* words;
 	unsigned int* count;
 
@@ -54,7 +56,7 @@ void WordManager::getFile(int fileType)
 	
 }
 
-void WordManager::getFileOffline(std::unordered_map<std::string, std::unordered_set<std::string>>& wordMap, const std::vector<std::string>& words)
+/*void WordManager::getFileOffline(HashTable& wordMap, const std::vector<std::string>& words)
 {
 	std::string temp;
 	bool hasFailed = false;
@@ -76,9 +78,9 @@ void WordManager::getFileOffline(std::unordered_map<std::string, std::unordered_
 			break;
 		wordMap[temp.substr(0, 2)].insert(temp);
 	}
-}
+}*/
 
-void WordManager::getFileOnline(std::unordered_map<std::string, std::unordered_set<std::string>>& wordMap, std::string url, std::string fileName, unsigned int& count)
+void WordManager::getFileOnline(HashTable& wordMap, std::string url, std::string fileName, unsigned int& count)
 {
 	std::string temp;
 	bool hasFailed = false;
@@ -102,7 +104,7 @@ void WordManager::getFileOnline(std::unordered_map<std::string, std::unordered_s
 		if (temp == "")
 			break;
 		std::transform(temp.begin(), temp.end(), temp.begin(), ::tolower);
-		wordMap[temp.substr(0, 2)].insert(temp);
+		wordMap.insert(temp);
 		count++;
 	}
 	inFile.close();
@@ -116,31 +118,20 @@ void WordManager::testFunction()
 
 std::string WordManager::getRandomWord()
 {
-	int temp = RandomNumber::Number(0, (int) solutionList.size()), count = 0;
-	std::unordered_set<std::string> buff;
-	for (auto it : solutionList) {
-		buff = it.second;
-		if (count >= temp)
-			break;
-		count++;
-	}
-	temp = RandomNumber::Number(0, (int) buff.size()-1);
-	count = 0;
-	for (auto it : buff) {
-		if (count >= temp)
-			return it;
-		count++;
-	}
-	return "Wrong";
+	int temp = RandomNumber::Number(0, solutionCount);
+	return solutionList.randomWord(temp);
+}
+
+std::string WordManager::getDailyWord()
+{
+	int temp = RandomNumber::DailyNumber(0, solutionCount);
+	return solutionList.randomWord(temp);
 }
 
 bool WordManager::isValid(std::string word)
 {
-	std::transform(word.begin(), word.end(), word.begin(), ::tolower);
-	std::unordered_set<std::string> buff = validList[word.substr(0,2)];
-	if (buff.find(word) != buff.end()) {
-		return true;
-	} else {
+	if (word.size() != 5)
 		return false;
-	}
+	std::transform(word.begin(), word.end(), word.begin(), ::tolower);
+	return validList.find(word);
 }
