@@ -6,11 +6,13 @@ class GameLogic
 {
 	private:
 		std::string checkGuess(std::string guess);
+		bool checkHard(std::string guess, std::string oldGuess, std::string guessCheck);
 		std::string target;
-		WordManager wordList;
+		WordManager* wordList;
 	public:
 
-		//GameLogic();
+		GameLogic();
+		~GameLogic();
 		int runGame();
 };
 
