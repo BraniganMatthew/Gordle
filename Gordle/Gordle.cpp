@@ -7,17 +7,21 @@
 
 int main()
 {
+    GameLogic game;
+    game.runGame();
+    //WordManager test;
+    //std::cout << test.getRandomWord() << std::endl;
+
     std::cout << "Hello World!\n";
 
     std::cout << "Hello Matt\n";
 
     std::cout << "We should use namespace std!" << std::endl;
 
-    GameLogic game;
-    game.runGame();
 
-    WordManager test;
-    test.testFunction();
+    
+
+    
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

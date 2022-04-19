@@ -11,8 +11,6 @@ class HashTable
 		unsigned int tableSize, numItems;
 		float maxLoadFactor;
 
-		int twoLetterHash(std::string input);
-		int threeLetterHash(std::string input);
 		int hash(std::string input);
 		void reHash();
 		

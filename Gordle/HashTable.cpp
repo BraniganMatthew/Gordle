@@ -3,6 +3,7 @@
 #include <iostream>
 #include <cmath>
 
+//Initializes Hash table with default values
 HashTable::HashTable()
 {
 	tableSize = 10;
@@ -11,11 +12,13 @@ HashTable::HashTable()
 	arr = new std::vector<std::list<std::string>>(tableSize);
 }
 
+//Deletes vector of lists when done
 HashTable::~HashTable()
 {
 	delete arr;
 }
 
+//Uses power of 31 hashing for the strings
 void HashTable::reHash()
 {
 	tableSize *= 2;
@@ -34,33 +37,19 @@ void HashTable::reHash()
 	delete oldArr;
 }
 
+//Converts string value into usable hash number
 int HashTable::hash(std::string input)
 {
-	int power = 31, sum = 0, size = input.size();
-
+	unsigned int power = 31, sum = 0, size = (unsigned int)input.size();
+	//Uses power of 31 hashing for the strings
 	for (int i = 0; i < size; i++) {
-		sum += input.at(i) * std::pow(31, size - 1 - i);
+		sum += input.at(i) * (unsigned int) std::pow(31, size - 1 - i);
 	}
 
 	return sum % tableSize;
 }
 
-int HashTable::twoLetterHash(std::string input)
-{
-	input = input.substr(0, 2);
-	std::transform(input.begin(), input.end(), input.begin(), ::tolower);
-	int firstL = input.at(0) - 'a', secondL = input.at(1) - 'a';
-	return firstL * 26 + secondL;
-}
-
-int HashTable::threeLetterHash(std::string input)
-{
-	input = input.substr(2, 3);
-	std::transform(input.begin(), input.end(), input.begin(), ::tolower);
-	int firstL = input.at(0) - 'a', secondL = input.at(1) - 'a', thirdL = input.at(2) - 'a';
-	return firstL * 26 * 26 + secondL * 26 + thirdL;
-}
-
+//Checks if the value already exists in hash, if not, then hash and push word into location
 void HashTable::insert(std::string input)
 {
 	if (find(input))
@@ -71,10 +60,12 @@ void HashTable::insert(std::string input)
 	arr->at(index).push_back(input);
 	numItems++;
 
+	//if current load factor is >= to max, then rehash the table
 	if (((float)numItems / (float)tableSize) >= maxLoadFactor)
 		reHash();
 }
 
+//Returns a true or false if the input is currently in the hashtable
 bool HashTable::find(std::string input)
 {
 	int index = hash(input);
@@ -85,10 +76,11 @@ bool HashTable::find(std::string input)
 	return false;
 }
 
+//Returns a random word from the table depending on the given number
 std::string HashTable::randomWord(int goTo)
 {
 	auto it = arr->begin();
-	while (goTo > it->size()) {
+	while (goTo > (int) it->size()) {
 		goTo -= it->size();
 		it++;
 	}
