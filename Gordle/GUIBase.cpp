@@ -5,31 +5,9 @@
 #include "GameLogic.h"
 #include "TextureManager.h"
 
-
-
-//Redeclare the variable so this file can use it
-//std::unordered_map<std::string, sf::Texture> GUIBase::textures;
-
-/* FOR THE ROWS, MAKE ROWS IN PPT AND USE AS BUTTONS. SAME THING WITH GREEN/YELLOW/GRAY BACKGROUNDS. AND MAYBE LETTERS? */
-
-/*void GUIBase::LoadAllTextures()
-{
-	TextureManager::LoadTexture("easy");
-	LoadTexture("hard");
-	LoadTexture("wordleGray");
-	LoadTexture("wordleYellow");
-	LoadTexture("wordleGreen");
-}*/
-
-/*void GUIBase::LoadTexture(std::string fileName)
-{
-	std::string path = "images/";
-	path += fileName + ".png";
-	textures[fileName].loadFromFile(path);
-}*/
-
 std::string GUIBase::LoadHomeBoard(sf::RenderWindow& window, bool &daily)
 {
+	/* INITIALIZE MAIN MENU */
 	sf::Font font;
 	sf::Text text;
 	sf::RectangleShape rect(sf::Vector2f(75, 75));
@@ -42,14 +20,11 @@ std::string GUIBase::LoadHomeBoard(sf::RenderWindow& window, bool &daily)
 	std::vector<std::pair<int, int>> pos;
 
 	// Load 'easy', 'hard', and 'daily' mode buttons and create Sprites for each
-	/*LoadTexture("easy");
-	LoadTexture("hard");*/
 	sf::Sprite easyBtn(TextureManager::GetTexture("easy"));
 	sf::Sprite hardBtn(TextureManager::GetTexture("hard"));
 	sf::Sprite dailyBtn(TextureManager::GetTexture("daily"));
 	easyBtn.setScale(0.5, 0.5);
 	hardBtn.setScale(0.5, 0.5);
-	//dailyBtn.setScale(0.5, 0.5);
 
 	int x = 45;
 	for (int i = 0; i < title.size(); i++)
@@ -60,6 +35,7 @@ std::string GUIBase::LoadHomeBoard(sf::RenderWindow& window, bool &daily)
 		x += rect.getSize().x + 10;
 	}
 
+	// Load arial font
 	if (!font.loadFromFile("arial.ttf"))
 	{
 		std::cout << "File not loaded.";
@@ -127,6 +103,7 @@ std::string GUIBase::LoadHomeBoard(sf::RenderWindow& window, bool &daily)
 	// Display window
 	window.display();
 
+	// Open main menu
 	while (window.isOpen())
 	{
 		sf::Event gameplay;
@@ -135,20 +112,16 @@ std::string GUIBase::LoadHomeBoard(sf::RenderWindow& window, bool &daily)
 			if (gameplay.type == sf::Event::Closed) {
 				window.close();
 				return "";
-			}
-				
+			}		
 
+			// Check if mouse has been clicked
 			if (gameplay.type == sf::Event::MouseButtonPressed)
 			{
 				//Check to see if left mouse button was pressed
 				if (gameplay.mouseButton.button == sf::Mouse::Left)
 				{
-					std::cout << "Mouse Click";
 					//Get Mouse position relative to the window and convert to 2f vector
 					sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-					// sf::Vector2f mousePos = sf::Vector2f(mousePosition);
-
-					std::cout << mousePos.x << " ";
 
 					// Check easy or hard mode button, or end game button
 					sf::Vector2f hardBtnPos = hardBtn.getPosition();
@@ -157,18 +130,13 @@ std::string GUIBase::LoadHomeBoard(sf::RenderWindow& window, bool &daily)
 					sf::FloatRect easyBtnGloPos = easyBtn.getGlobalBounds();
 					sf::Vector2f dailyBtnPos = dailyBtn.getPosition();
 					sf::FloatRect dailyBtnGloPos = dailyBtn.getGlobalBounds();
-					// sf::Vector2f exitBtnPos = exitBtn.getPosition();
-					// sf::Vector2f resetBtnPos = resetBtn.getPosition();
-					// std::cout << easyBtnPos << " " << easyBtnPos.x + GetWidth().x;
 
 					if (mousePos.x > dailyBtnPos.x && mousePos.x < (dailyBtnPos.x + dailyBtnGloPos.width) && mousePos.y >  dailyBtnPos.y && mousePos.y < (dailyBtnPos.y + dailyBtnGloPos.height)) // Daily
 					{
 						// Daily mode
 						daily = true;
 					}
-					else {
-						//daily = false;
-					}
+
 					if (mousePos.x > easyBtnPos.x && mousePos.x < (easyBtnPos.x + easyBtnGloPos.width) && mousePos.y > easyBtnPos.y && mousePos.y < (easyBtnPos.y + easyBtnGloPos.height))
 					{
 						// Switch to easy mode
@@ -199,7 +167,7 @@ void GUIBase::LoadGameBoard(sf::RenderWindow& window)
 	sf::Font font;
 	sf::Text text;
 
-	// Get font
+	// Get arial font
 	if (!font.loadFromFile("arial.ttf"))
 	{
 		std::cout << "File not loaded.";
@@ -260,18 +228,6 @@ void GUIBase::LoadGameBoard(sf::RenderWindow& window)
 	window.display();
 }
 
-/*sf::Texture& GUIBase::GetTexture(std::string textureName)
-{
-	//Check if the texture exists
-	if (textures.find(textureName) == textures.end())
-	{
-		LoadTexture(textureName);
-	}
-
-	return textures[textureName];
-}*/
-
-/* MAKE SURE JUSTIN PASSES IN PREV GUESSES WITH THE MOST RECENT GUESS IN IT AS WELL */
 void GUIBase::UpdateBoard(sf::RenderWindow& window, std::vector<std::string> prevGuesses, std::vector<std::string> prevColors, std::string mode, bool validGuess, bool validHardGuess)
 {
 	// Draw base board
@@ -340,8 +296,6 @@ void GUIBase::UpdateBoard(sf::RenderWindow& window, std::vector<std::string> pre
 			errorMsg = "Guess must include clues from previous guess. Please retype a new word!";
 			// Set string to print
 			text.setString(errorMsg);
-			// while()
-			// return
 		}
 		else
 		{
@@ -355,8 +309,6 @@ void GUIBase::UpdateBoard(sf::RenderWindow& window, std::vector<std::string> pre
 			errorMsg = "Invalid Guess. Please retype a new word!";
 			// Set string to print
 			text.setString(errorMsg);
-			// while()
-			// return
 		}
 		else
 		{
@@ -437,19 +389,6 @@ void GUIBase::UpdateBoard(sf::RenderWindow& window, std::vector<std::string> pre
 				window.draw(grayBackground);
 			}
 
-			//window.draw(greenBackground);
-
-			/*yellowBackground.setPosition(XPos, YPos);
-			window.draw(yellowBackground);
-			grayBackground.setPosition(XPos, YPos);
-			window.draw(grayBackground); */
-
-			// Create sprite for letter
-			/*sf::Sprite letter(GetTexture(std::to_string(currLetter)));
-			letter.setScale(0.5, 0.5);
-			letter.setPosition(pos[3].first + (rect.getSize().x / 2), pos[3].second + (rect.getSize().y) + 75);
-			window.draw(letter);*/
-
 			// Set string to print
 			text.setString(guess);
 
@@ -465,15 +404,11 @@ void GUIBase::UpdateBoard(sf::RenderWindow& window, std::vector<std::string> pre
 
 			window.draw(text);
 
-			// Display window
-			//window.display();
-
+			// Check position of the green background to set the x position of the letters
 			sf::Vector2f greenBackgroundPos = greenBackground.getPosition();
 			sf::FloatRect greenBackgroundGloPos = greenBackground.getGlobalBounds();
 			xPos += greenBackgroundGloPos.width + 25;
 		}
-
-		// window.display();
 
 		// Reset xPos and vector of sprites, increment yPos
 		xPos = window.getSize().x / 8;
@@ -482,27 +417,14 @@ void GUIBase::UpdateBoard(sf::RenderWindow& window, std::vector<std::string> pre
 	}
 
 	window.display();
-
-	/*while (window.isOpen())
-	{
-		sf::Event gameplay;
-		while (window.pollEvent(gameplay))
-		{
-			if (gameplay.type == sf::Event::Closed)
-				window.close();
-			
-			if (gameplay.type == sf::Event::KeyPressed)
-				return;
-		}
-	}*/
 }
 
 std::string GUIBase::KeyboardInput(sf::RenderWindow& window)
 {
 	sf::Event getGuess;
 	std::string guess = "";
-	// window.setKeyRepeatEnabled(false);
 
+	// Display menu and take in user input via keyboard
 	while (window.isOpen())
 	{
 		while (window.pollEvent(getGuess))
@@ -529,11 +451,11 @@ std::string GUIBase::KeyboardInput(sf::RenderWindow& window)
 						return guess; // Only allow enter if guess is 5 letters
 					}
 				}
-				else if (getGuess.key.code == sf::Keyboard::BackSpace)
+				else if (getGuess.key.code == sf::Keyboard::BackSpace) // Pop back to emulate backspace function
 				{
 					if (guess.size() > 0)
 					{
-						guess.pop_back(); // Execute backspace on the guess
+						guess.pop_back();
 					}
 				}
 				else if (guess.size() >= 5) {
@@ -541,6 +463,7 @@ std::string GUIBase::KeyboardInput(sf::RenderWindow& window)
 				}
 				else
 				{
+					// Convert user input via keyboard to a char
 					char temp = static_cast<char>(getGuess.key.code - sf::Keyboard::A + 'A');
 					if (temp >= 'A' && temp <= 'Z')
 						guess += temp; // Add proper character to guess
@@ -550,11 +473,6 @@ std::string GUIBase::KeyboardInput(sf::RenderWindow& window)
 	}
 }
 
-/*void  GUIBase::Clear()
-{
-	textures.clear();
-}*/
-
 int main()
 {
 	GUIBase gui;
@@ -562,27 +480,9 @@ int main()
 	TextureManager::downloadFont();
 	sf::RenderWindow window(sf::VideoMode(600, 600), "GORDLE");
 
-	//gui.LoadAllTextures();
-
 	bool daily = false;
 
-	/* std::vector<std::string> prevGuesses = {"among", "hello", "world"};
-	std::vector<std::string> prevColors = {"YYYY", "YGYGY", "YGYYG"};
-	bool validGuess = true;
-	bool validHardGuess = true;
-
-	gui.UpdateBoard(window, prevGuesses, prevColors, mode, validGuess, validHardGuess);
-
-	validGuess = false;
-	validHardGuess = false;
-	gui.UpdateBoard(window, prevGuesses, prevColors, mode, validGuess, validHardGuess);
-
-	prevGuesses.push_back("plants");
-	prevColors.push_back("GGGGG");
-	validGuess = true;
-	validHardGuess = true;
-	gui.UpdateBoard(window, prevGuesses, prevColors, mode, validGuess, validHardGuess);*/
-
+	// Load the menu board
 	std::string mode = gui.LoadHomeBoard(window, daily);
 
 	std::string targetWord = logic.giveTarget(daily); // Get target word
@@ -592,6 +492,7 @@ int main()
 		return 0;
 	}
 
+	// Declare necessary variables to store guesses, colors, and validity of guesses
 	std::vector<std::string> prevGuesses;
 	std::vector<std::string> prevColors;
 	std::string guess = "";
@@ -638,10 +539,6 @@ int main()
 			{
 				window.close();
 			}	
-			
-			/* if(gameOver)
-				*	return 0;
-				* */
 
 			if (counter == 6 || winner) // Check if game won or lost (determined at 6 guesses)
 			{
@@ -670,6 +567,7 @@ int main()
 				{
 					if (gameplay.key.code == sf::Keyboard::Enter)
 					{
+						// Reset information for next gameplay
 						counter = 0;
 						winner = false;
 						daily = false;
@@ -679,7 +577,7 @@ int main()
 				}
 			}
 
-			if (counter == 0) // Check if prevGuess.size() == 0
+			if (counter == 0) // No guesses made
 			{
 				gui.LoadGameBoard(window);
 				if (daily)
@@ -688,7 +586,7 @@ int main()
 					targetWord = logic.giveTarget(false);
 			}
 
-			if (counter >= 0 && counter < 6) 
+			if (counter >= 0 && counter < 6) // Guesses between 0 and 6
 			{
 				window.pollEvent(gameplay);
 				if (!window.isOpen())
@@ -723,6 +621,7 @@ int main()
 					counter++;
 				}
 				else {
+					// Remove invalid guesses
 					prevGuesses.pop_back();
 					prevColors.pop_back();
 				}
