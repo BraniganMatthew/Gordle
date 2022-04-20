@@ -10,6 +10,8 @@ GameLogic::GameLogic()
 {
 	bool whichStruc = false;
 	wordList = new WordManager(whichStruc);
+	WordManager* temp = new WordManager(true);
+	delete temp;
 }
 
 //wordlist destructor

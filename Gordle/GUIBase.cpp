@@ -10,30 +10,23 @@ std::string GUIBase::LoadHomeBoard(sf::RenderWindow& window, bool &daily)
 	/* INITIALIZE MAIN MENU */
 	sf::Font font;
 	sf::Text text;
-	sf::RectangleShape rect(sf::Vector2f(75, 75));
+	/*sf::RectangleShape rect(sf::Vector2f(75, 75));
 	rect.setFillColor(sf::Color(0, 33, 165)); // Gator Blue
 	rect.setOutlineThickness(2);
-	rect.setOutlineColor(sf::Color(250, 70, 22)); // Gator Orange
+	rect.setOutlineColor(sf::Color(250, 70, 22)); // Gator Orange*/
 
 	// Title vector, and a vector to store positions
-	std::vector<char> title = { 'G','O', 'R', 'D', 'L', 'E' };
-	std::vector<std::pair<int, int>> pos;
+	//std::vector<char> title = { 'G','O', 'R', 'D', 'L', 'E' };
+	//std::vector<std::pair<int, int>> pos;
 
-	// Load 'easy', 'hard', and 'daily' mode buttons and create Sprites for each
+	// Load 'easy', 'hard', 'header', and 'daily' buttons and create Sprites for each
 	sf::Sprite easyBtn(TextureManager::GetTexture("easy"));
 	sf::Sprite hardBtn(TextureManager::GetTexture("hard"));
 	sf::Sprite dailyBtn(TextureManager::GetTexture("daily"));
+	sf::Sprite headerBtn(TextureManager::GetTexture("header"));
 	easyBtn.setScale(0.5, 0.5);
-	hardBtn.setScale(0.5, 0.5);
-
-	int x = 45;
-	for (int i = 0; i < title.size(); i++)
-	{
-		std::pair<int, int> temp;
-		temp = std::make_pair(x, 125);
-		pos.push_back(temp);
-		x += rect.getSize().x + 10;
-	}
+	hardBtn.setScale(0.52, 0.53);
+	headerBtn.setScale(0.25, 0.25);
 
 	// Load arial font
 	if (!font.loadFromFile("C:/Windows/Fonts/arial.ttf"))
@@ -41,40 +34,15 @@ std::string GUIBase::LoadHomeBoard(sf::RenderWindow& window, bool &daily)
 		std::cout << "File not loaded.";
 	}
 
-
 	/* Initialize the GORDLE Board */
 
 	window.clear(sf::Color(255, 255, 255)); // White
 
-	for (int i = 0; i < title.size(); i++)
-	{
-		// Rectangles
-		rect.setPosition(pos[i].first, pos[i].second);
-		window.draw(rect);
-
-		// Select font
-		text.setFont(font);
-
-		// Set string to print
-		text.setString(title[i]);
-
-		// Set the character size
-		text.setCharacterSize(48);
-
-		// Set color
-		text.setFillColor(sf::Color(250, 70, 22)); // Gator Orange
-
-		// Set text style
-		text.setStyle(sf::Text::Bold);
-
-		// Set position
-		text.setPosition(pos[i].first + (rect.getSize().x / 4), pos[i].second + (rect.getSize().y / 8));
-
-		window.draw(text);
-	}
-
 	// Type the catchphrase "A UF-Styled Wordle Game"
 	std::string subtitle = "A UF-STYLED WORDLE GAME";
+
+	// Set font
+	text.setFont(font);
 
 	// Set string to print
 	text.setString(subtitle);
@@ -89,17 +57,20 @@ std::string GUIBase::LoadHomeBoard(sf::RenderWindow& window, bool &daily)
 	text.setStyle(sf::Text::Bold);
 
 	// Set position
-	text.setPosition(pos[0].first + (rect.getSize().x / 2), pos[0].second + (rect.getSize().y) + 10);
-
-	window.draw(text);
+	text.setPosition(window.getSize().x / 2 - 215, window.getSize().y / 2 - 150);
 
 	// Set position of easy and hard buttons, as well as daily button
-	easyBtn.setPosition(pos[0].first + (rect.getSize().x / 2), pos[0].second + (rect.getSize().y) + 75);
+	easyBtn.setPosition(window.getSize().x / 2 - 200, window.getSize().y / 2 - 65);
 	window.draw(easyBtn);
-	hardBtn.setPosition(pos[3].first + (rect.getSize().x / 2), pos[3].second + (rect.getSize().y) + 75);
+	hardBtn.setPosition(window.getSize().x / 2 + 25, window.getSize().y / 2 - 68);
 	window.draw(hardBtn);
-	dailyBtn.setPosition(window.getSize().x / 2 - 150, window.getSize().y / 2 + 100);
+	dailyBtn.setPosition(window.getSize().x / 2 - 187, window.getSize().y / 2 + 65);
 	window.draw(dailyBtn);
+	headerBtn.setPosition(window.getSize().x / 2 - 188, window.getSize().y / 2 - 225);
+	window.draw(headerBtn);
+
+	// Draw catchphrase
+	window.draw(text);
 
 	// Display window
 	window.display();
@@ -141,13 +112,11 @@ std::string GUIBase::LoadHomeBoard(sf::RenderWindow& window, bool &daily)
 					if (mousePos.x > easyBtnPos.x && mousePos.x < (easyBtnPos.x + easyBtnGloPos.width) && mousePos.y > easyBtnPos.y && mousePos.y < (easyBtnPos.y + easyBtnGloPos.height))
 					{
 						// Switch to easy mode
-						std::cout << "Easy Button";
 						return "easy";
 					}
 					else if (mousePos.x > hardBtnPos.x && mousePos.x < (hardBtnPos.x + hardBtnGloPos.width) && mousePos.y > hardBtnPos.y && mousePos.y < (hardBtnPos.y + hardBtnGloPos.height))
 					{
 						// Switch to hard mode
-						std::cout << "Hard Button";
 						return "hard";
 					}
 				}

@@ -161,8 +161,15 @@
     <ClInclude Include="RandomNumber.h" />
     <ClInclude Include="RedBlack.h" />
     <ClInclude Include="resource1.h" />
+    <ClInclude Include="resource2.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="WordManager.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Gordle1.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="images\applogo_0Vv_icon.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
