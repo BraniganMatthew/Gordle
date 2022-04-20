@@ -484,6 +484,7 @@ int main()
 	GameLogic logic;
 	TextureManager::downloadFont();
 	sf::RenderWindow window(sf::VideoMode(600, 600), "GORDLE");
+	window.setFramerateLimit(144);
 
 	bool daily = false;
 
