@@ -2,18 +2,33 @@
 #include "WordManager.h"
 #include <iostream>
 
+//gameLogic constructor that gets wordlist from either data structure
+//whichStruc == true uses Red-Black tree
+//whichStruc == false uses hash table
 GameLogic::GameLogic()
 {
 	bool whichStruc = true;
 	wordList = new WordManager(whichStruc);
 }
 
+//wordlist destructor
 GameLogic::~GameLogic()
 {
 	delete wordList;
 }
 
-int GameLogic::runGame()
+//retrieves target random word from list if !daily
+//retrieves daily word if daily
+std::string GameLogic::giveTarget(bool daily) {
+	if (daily) {
+		return wordList->getDailyWord();
+	}
+	else {
+		return wordList->getRandomWord();
+	}
+}
+
+/*int GameLogic::runGame()
 {
 	bool hMode = false;
 	std::cout << "H for hard mode or N for normal:";
@@ -39,6 +54,7 @@ int GameLogic::runGame()
 	std::string oldGuess = guess;
 	std::vector<std::string> guessesMade;
 	std::vector<std::string> colorsMade;
+	bool hardValid = true;
 	while (guesses < 7 && guess != target) {
 		bool valid = false;
 		while (!valid) {
@@ -50,6 +66,7 @@ int GameLogic::runGame()
 				valid = checkHard(guess, oldGuess, guessCheck);
 				if (!valid) {
 					std::cout << "hard fail " << std::endl;
+					hardValid = false;
 				}
 			}
 		}
@@ -63,17 +80,23 @@ int GameLogic::runGame()
 	}
 	std::cout << target << std::endl;
 	return guesses;
-}
+}*/
 
-std::string GameLogic::checkGuess(std::string guess)
+
+//checks guess and returns colors
+std::string GameLogic::checkGuess(std::vector<std::string> guesses, std::string target)
 {
+	std::string guess = guesses[guesses.size() - 1];
+	//creates a map for the target word
 	std::unordered_map<char, std::pair<std::unordered_set<int>, int>> targetWord;
 	std::string checked = "00000";
+	//inserts the target word into the map
 	for (int i = 0; i < 5; i++) {
 		targetWord[target.at(i)].first.insert(i);
 		targetWord[target.at(i)].second++;
 	}
 
+	//checks if a letter is in the correct position
 	for (int i = 0; i < 5; i++) {
 		if (targetWord[guess.at(i)].second > 0) {
 			if (targetWord[guess.at(i)].first.find(i) != targetWord[guess.at(i)].first.end()) {
@@ -83,6 +106,7 @@ std::string GameLogic::checkGuess(std::string guess)
 		}
 	}
 
+	//checks if a letter is in the word but in the wrong position
 	for (int i = 0; i < 5; i++) {
 		if (checked[i] == 'G')
 			continue;
@@ -95,16 +119,37 @@ std::string GameLogic::checkGuess(std::string guess)
 		}
 	}
 
-	/*for (int i = 0; i < 5; i++) {
-		std::cout << checked[i] << std::endl;
-	}*/
+	//returns a string with the colors of each letter
 	return checked;
 }
 
-bool GameLogic::checkHard(std::string guess, std::string oldGuess, std::string guessCheck)
+//checks the word list to see if the guess is valid
+bool GameLogic::checkValid(std::vector<std::string> guesses) {
+	std::string guess = guesses[guesses.size() - 1];
+	bool valid = wordList->isValid(guess);
+	return valid;
+}
+
+//hardmode
+//checks the new guess to see if it uses the clues from the previous guess
+bool GameLogic::checkHard(std::vector<std::string> guesses, std::vector<std::string> colors, std::string hardMode)
 {
+	//getting comparison from vectors
+	std::string guess = guesses[guesses.size() - 1];
+	std::string oldGuess = "";
+	std::string guessCheck = colors[colors.size() - 1];
+
+	//checks if hardmode is on and if there is a previous guess to try
+	if (guesses.size() > 1 && hardMode == "hard") {
+		oldGuess = guesses[guesses.size() - 2];
+	}
+	else {
+		return true;
+	}
 	bool valid = true;
 	std::string toCheck = "";
+
+	//checks if green letters are still in the same place
 	for (int i = 0; i < 5; i++) {
 		if (guessCheck[i] == 'G') {
 			if (guess[i] != oldGuess[i]) {
@@ -117,7 +162,8 @@ bool GameLogic::checkHard(std::string guess, std::string oldGuess, std::string g
 			toCheck += oldGuess[i];
 		}
 	}
-	//std::cout << toCheck << std::endl;
+
+	//checks if yellow letters are still in the word by using the amounts of yellows and count in new guess
 	for (int i = 0; i < toCheck.length(); i++) {
 		int clues = 0;
 		int found = 0;
@@ -131,15 +177,11 @@ bool GameLogic::checkHard(std::string guess, std::string oldGuess, std::string g
 				found++;
 			}
 		}
-		//std::cout << toCheck[i] << clues << found << std::endl;
 		if (clues > found) {
 			valid = false;
 			break;
 		}
 	}
 
-	if (valid) {
-		//std::cout << "valid" << std::endl;
-	}
 	return valid;
 }

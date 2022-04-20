@@ -5,14 +5,16 @@
 class GameLogic
 {
 	private:
-		std::string checkGuess(std::string guess);
-		bool checkHard(std::string guess, std::string oldGuess, std::string guessCheck);
+		std::string checkGuess(std::vector<std::string> guesses, std::string target);
+		bool checkHard(std::vector<std::string> guesses, std::vector<std::string> colors, std::string hardMode);
+		bool checkValid(std::vector<std::string> guesses);
 		std::string target;
 		WordManager* wordList;
+		std::string giveTarget(bool daily);
 	public:
 
 		GameLogic();
 		~GameLogic();
-		int runGame();
+		//int runGame();
 };
 
