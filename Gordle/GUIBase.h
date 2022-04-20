@@ -13,7 +13,7 @@ public:
 	std::string LoadHomeBoard(sf::RenderWindow& window, bool& daily);
 	void LoadGameBoard(sf::RenderWindow& window);
 	void UpdateBoard(sf::RenderWindow& window, std::vector<std::string> prevGuesses, std::vector<std::string> prevColors, std::string mode, bool validGuess, bool validHardGuess);
-	std::string KeyboardInput(sf::RenderWindow& window);
+	bool KeyboardInput(sf::RenderWindow& window, std::string& guess);
 	//static void Clear(); //Called at end of main()
 };
 

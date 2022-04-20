@@ -36,10 +36,11 @@ std::string GUIBase::LoadHomeBoard(sf::RenderWindow& window, bool &daily)
 	}
 
 	// Load arial font
-	if (!font.loadFromFile("arial.ttf"))
+	if (!font.loadFromFile("C:/Windows/Fonts/arial.ttf"))
 	{
 		std::cout << "File not loaded.";
 	}
+
 
 	/* Initialize the GORDLE Board */
 
@@ -168,7 +169,7 @@ void GUIBase::LoadGameBoard(sf::RenderWindow& window)
 	sf::Text text;
 
 	// Get arial font
-	if (!font.loadFromFile("arial.ttf"))
+	if (!font.loadFromFile("C:/Windows/Fonts/arial.ttf"))
 	{
 		std::cout << "File not loaded.";
 	}
@@ -238,7 +239,7 @@ void GUIBase::UpdateBoard(sf::RenderWindow& window, std::vector<std::string> pre
 	sf::Text text;
 
 	// Get font
-	if (!font.loadFromFile("arial.ttf"))
+	if (!font.loadFromFile("C:/Windows/Fonts/arial.ttf"))
 	{
 		std::cout << "File not loaded.";
 	}
@@ -419,10 +420,10 @@ void GUIBase::UpdateBoard(sf::RenderWindow& window, std::vector<std::string> pre
 	window.display();
 }
 
-std::string GUIBase::KeyboardInput(sf::RenderWindow& window)
+bool GUIBase::KeyboardInput(sf::RenderWindow& window, std::string& guess)
 {
 	sf::Event getGuess;
-	std::string guess = "";
+	//std::string guess = "";
 
 	// Display menu and take in user input via keyboard
 	while (window.isOpen())
@@ -438,17 +439,17 @@ std::string GUIBase::KeyboardInput(sf::RenderWindow& window)
 				{
 					/* EASTER EGGS */
 					if (guess == "FSU")
-						return "SUCKS";
+						guess = "SUCKS";
 
 					if (guess == "GO")
-						return "GATOR";
+						guess = "GATOR";
 
 					if (guess == "UF")
-						return "GREAT";
+						guess = "GREAT";
 
 					if (guess.size() == 5)
 					{
-						return guess; // Only allow enter if guess is 5 letters
+						return true; // Only allow enter if guess is 5 letters
 					}
 				}
 				else if (getGuess.key.code == sf::Keyboard::BackSpace) // Pop back to emulate backspace function
@@ -456,6 +457,7 @@ std::string GUIBase::KeyboardInput(sf::RenderWindow& window)
 					if (guess.size() > 0)
 					{
 						guess.pop_back();
+						return false;
 					}
 				}
 				else if (guess.size() >= 5) {
@@ -465,8 +467,11 @@ std::string GUIBase::KeyboardInput(sf::RenderWindow& window)
 				{
 					// Convert user input via keyboard to a char
 					char temp = static_cast<char>(getGuess.key.code - sf::Keyboard::A + 'A');
-					if (temp >= 'A' && temp <= 'Z')
+					if (temp >= 'A' && temp <= 'Z') {
 						guess += temp; // Add proper character to guess
+						return false;
+					}
+						
 				}
 			}		
 		}
@@ -489,6 +494,7 @@ int main()
 
 	if (mode == "") // Exit program
 	{
+		TextureManager::Clear();
 		return 0;
 	}
 
@@ -500,13 +506,17 @@ int main()
 	bool validHardGuess = true;
 	int counter = 0;
 	bool winner = false;
+	bool isFinished = false;
+	bool nextGame = true;
+	bool onlyColor = false;
+
 
 	/* TEXT AND FONT INFORMATION */
 	sf::Font font;
 	sf::Text text;
 
 	// Get font
-	if (!font.loadFromFile("arial.ttf"))
+	if (!font.loadFromFile("C:/Windows/Fonts/arial.ttf"))
 	{
 		std::cout << "File not loaded.";
 	}
@@ -543,42 +553,61 @@ int main()
 			if (counter == 6 || winner) // Check if game won or lost (determined at 6 guesses)
 			{
 				//window.pollEvent(gameplay);
-				prevColors.clear();
-				prevGuesses.clear();
 				if (winner)
 				{
 					// Game is won
 					text.setString("Congratulations! You got the word: " + targetWord);
-					counter = 6;
-					
+					counter = 7;
+					winner = false;
+
 				}
 				else
 				{
 					// Game is lost
 					text.setString("You lost :( The word was: " + targetWord);
-					
+
 				}
 
 				window.display();
 				window.draw(text);
 				window.display();
 
-				if (gameplay.type == sf::Event::EventType::KeyPressed)
+			}
+
+			if (gameplay.type == sf::Event::EventType::KeyPressed)
+			{
+				if (gameplay.key.code == sf::Keyboard::Enter)
 				{
-					if (gameplay.key.code == sf::Keyboard::Enter)
-					{
-						// Reset information for next gameplay
-						counter = 0;
-						winner = false;
-						daily = false;
-						targetWord = logic.giveTarget(daily);
-						mode = gui.LoadHomeBoard(window, daily);
+					// Reset information for next gameplay
+					prevColors.clear();
+					prevGuesses.clear();
+					counter = 0;
+					winner = false;
+					daily = false;
+					nextGame = true;
+					targetWord = logic.giveTarget(daily);
+					mode = gui.LoadHomeBoard(window, daily);
+				}
+
+				if (gameplay.key.code == sf::Keyboard::BackSpace)
+				{
+					//Switches between only displaying the color or showing the words
+					if (onlyColor) {
+						onlyColor = false;
+						gui.UpdateBoard(window, prevGuesses, prevColors, mode, true, true);
+					}
+					else {
+						std::vector<std::string> blankGuesses(prevGuesses.size(), "     ");
+						onlyColor = true;
+						gui.UpdateBoard(window, blankGuesses, prevColors, mode, true, true);
 					}
 				}
 			}
+			
 
-			if (counter == 0) // No guesses made
+			if (counter == 0 && nextGame) // No guesses made and next game must start
 			{
+				nextGame = false;
 				gui.LoadGameBoard(window);
 				if (daily)
 					targetWord = logic.giveTarget(true);
@@ -589,36 +618,54 @@ int main()
 			if (counter >= 0 && counter < 6) // Guesses between 0 and 6
 			{
 				window.pollEvent(gameplay);
-				if (!window.isOpen())
+				if (!window.isOpen()) {
+					TextureManager::Clear();
 					return 0;
+				}
+					
 				// Get guess and check if it matches the target word
-				guess = gui.KeyboardInput(window);
-				if (!window.isOpen())
+				isFinished = gui.KeyboardInput(window, guess);
+				if (!window.isOpen()) {
+					TextureManager::Clear();
 					return 0;
+				}
+				//Checks if the user is ready to submit word
+				if (isFinished) {
+					// Check if current guess is valid
+					prevGuesses.push_back(guess);
+					validGuess = logic.checkValid(prevGuesses);
+					if (validGuess && mode == "easy")
+						prevColors.push_back(logic.checkGuess(prevGuesses, targetWord));
+					else if (mode == "easy")
+						prevColors.push_back("EEEEE");
 
-				// Check if current guess is valid
-				prevGuesses.push_back(guess);
-				validGuess = logic.checkValid(prevGuesses);
-				if (validGuess && mode == "easy")
-					prevColors.push_back(logic.checkGuess(prevGuesses, targetWord));
-				else if (mode == "easy")
+					validHardGuess = logic.checkHard(prevGuesses, prevColors, mode);
+					if (validHardGuess && validGuess && mode == "hard")
+						prevColors.push_back(logic.checkGuess(prevGuesses, targetWord));
+					else if (mode == "hard")
+						prevColors.push_back("EEEEE");
+				}
+				else {
+					validGuess = true;
+					validHardGuess = true;
 					prevColors.push_back("EEEEE");
-
-				validHardGuess = logic.checkHard(prevGuesses, prevColors, mode);
-				if (validHardGuess && validGuess && mode == "hard")
-					prevColors.push_back(logic.checkGuess(prevGuesses, targetWord));
-				else if (mode == "hard")
-					prevColors.push_back("EEEEE");
+					std::string tempGuess = guess;
+					while (tempGuess.size() < 5) {
+						tempGuess.push_back(' ');
+					}
+					prevGuesses.push_back(tempGuess);
+				}
 
 				// Update board visualization
 				gui.UpdateBoard(window, prevGuesses, prevColors, mode, validGuess, validHardGuess);
-				if ((validGuess && mode == "easy") || (validHardGuess && validGuess && mode == "hard"))
+				if (isFinished && ((validGuess && mode == "easy") || (validHardGuess && validGuess && mode == "hard")))
 				{
 					if (prevColors[prevColors.size() - 1] == "GGGGG") // Correct guess
 					{
 						winner = true;
 					}
 					counter++;
+					guess = "";
 				}
 				else {
 					// Remove invalid guesses
@@ -628,4 +675,8 @@ int main()
 			}
 		}
 	}
+
+	TextureManager::Clear();
+	return 0;
+
 }

@@ -18,7 +18,7 @@ void TextureManager::LoadTexture(std::string fileName)
 void  TextureManager::Clear()
 {
 	textures.clear();
-	std::remove("arial.ttf");
+	//std::remove("arial.ttf");
 }
 
 sf::Texture& TextureManager::GetTexture(std::string textureName)
@@ -36,5 +36,5 @@ void TextureManager::downloadFont()
 {
 	std::string path = "arial.ttf";
 	std::string url = "https://raw.githubusercontent.com/BraniganMatthew/Gordle/master/images/" + path;
-	URLDownloadToFile(NULL, url.c_str(), path.c_str(), NULL, NULL);
+	//URLDownloadToFile(NULL, url.c_str(), path.c_str(), NULL, NULL);
 }
